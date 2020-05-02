@@ -1,0 +1,64 @@
+{% load static mathfilters %}
+<div class="row">
+    {% if rounds|length > 1 %}
+    <div class="col-md-3">
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+            {% for round in rounds %}
+            <a class="nav-link" id="{{ round.name }}-tab" href="#{{ round.name }}">{{ round.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+    <div class="col">
+        <div class="tab-content" id="v-pills-tabContent">
+            {% for round in rounds %}
+            <div class="tab-pane fade show active" id="{{ round.name }}" role="tabpanel" aria-labelledby="{{ round.name }}-tab">
+                {% if round.competition_format == "league" %}
+                <table class="table table-sm">
+                    <thead>
+                      <tr>
+                        <th class="text-center" scope="col">#</th>
+                        <th scope="col">Team</th>
+                        <th class="text-center" scope="col">P</th>
+                        <th class="text-center" scope="col">W</th>
+                        <th class="text-center" scope="col">D</th>
+                        <th class="text-center" scope="col">L</th>
+                        <th class="d-none d-md-table-cell text-center" scope="col">GF</th>
+                        <th class="d-none d-md-table-cell text-center" scope="col">GA</th>
+                        <th class="text-center" scope="col">GD</th>
+                        <th class="text-center" scope="col">Pts</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% for team in round.teams %}
+                    <tr>
+                        <th class="text-center" scope="row">{{ forloop.counter }}</th>
+                        <td>
+                            <a href="{% url 'team' team.team.id %}">{% include "macros/teamLogo.html" with team=team.team size=1 %} {{ team.team.name }}</a>
+                            <div id="last-results" class="small">
+                                <i class="fas fa-square text-success"></i>
+                                <i class="fas fa-square text-danger"></i>
+                                <i class="fas fa-square text-warning"></i>
+                                <i class="fas fa-square text-success"></i>
+                                <i class="fas fa-square text-success"></i>
+                            </div>
+                        </td>
+                        <td class="text-center">{{ team.wins|sum:team.draws|sum:team.losses }}</td>
+                        <td class="text-center">{{ team.wins }}</td>
+                        <td class="text-center">{{ team.draws }}</td>
+                        <td class="text-center">{{ team.losses }}</td>
+                        <td class="d-none d-md-table-cell text-center" >{{ team.scored_goals }}</td>
+                        <td class="d-none d-md-table-cell text-center" >{{ team.received_goals }}</td>
+                        <td class="text-center">{{ team.scored_goals|sub:team.received_goals }}</td>
+                        <td class="text-center font-weight-bold">{{ team.points }}</td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            </div>
+            {% endfor %}
+            
+        </div>
+    </div>
+</div>

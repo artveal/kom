@@ -1,0 +1,15 @@
+<abbr title={{ position }}>
+    <span 
+        {% if position == "GK" %}
+        class="goalkeeper"
+        {% elif position in 'CD RD LD RW LW' %}
+        class="defender"
+        {% elif position in 'DM RM LM CM OM' %}
+        class="midfielder"
+        {% elif position in 'CF LF RF' %}
+        class="forward"
+        {% endif %}
+    >
+        {{ position }}
+    </span>
+</abbr>

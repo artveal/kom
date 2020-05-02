@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static trans %}
+{% block content %}
+    
+    <div class='col-12 col-md-6 mx-auto py-5 card'><div class="card-body">
+        <h1>{% trans 'register_navbar' %}</h1>
+        <form class="form-contact" action="" method="POST">
+            {% csrf_token %} 
+            <fieldset class="form-group">
+                <label class="control-label" for="id_{{ form.username.name }}">{% trans 'username_field' %}</label>
+                <input type="text" class="form-control"
+                    name="{{ form.username.name }}"
+                    id="id_{{ form.username.name }}">
+    
+            </fieldset>
+            <fieldset class="form-group">
+                <label class="control-label" for="id_{{ form.email.name }}">{% trans 'email_field' %}</label>
+                <input type="text" class="form-control"
+                    name="{{ form.email.name }}"
+                    id="id_{{ form.email.name }}">
+    
+            </fieldset>
+            <fieldset class="form-group">
+                <label class="control-label" for="id_{{ form.password1.name }}">{% trans 'password_field' %}</label>
+                <input type="password" class="form-control"
+                    name="{{ form.password1.name }}"
+                    id="id_{{ form.password1.name }}">
+    
+            </fieldset>
+            <fieldset class="form-group">
+                <label class="control-label" for="id_{{ form.password2.name }}">{% trans 'confirm_password_field' %}</label>
+                <input type="password" class="form-control"
+                    name="{{ form.password2.name }}"
+                    id="id_{{ form.password2.name }}">
+            </fieldset>
+            <input type="submit" value="Submit"  class="btn btn-primary">
+        </form>
+    </div></div>
+    
+
+{% endblock %}

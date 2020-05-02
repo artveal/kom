@@ -1,0 +1,3 @@
+<div class="progress">
+    <div class="progress-bar progress-{% if value > 80 %}excellent{% elif value > 70 %}good{% elif value > 60 %}medium{% elif value > 50 %}weak{% else %}bad{% endif %}" role="progressbar" style="width: {{ value }}%" aria-valuenow={{ value }} aria-valuemin="0" aria-valuemax="100"></div>
+</div>

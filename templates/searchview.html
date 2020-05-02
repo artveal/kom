@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static trans %}
+
+{% block title %}{% trans 'search_button' %}{% endblock %}
+
+{% block content %}
+
+    <div class='col-12 col-md-6 mx-auto py-5'>
+        <form method='GET' action='{% url "search" %}' class="form my-2 my-lg-0 search-form">
+            <div class='input-group'>
+            <input class="form-control" type="text" placeholder="{% trans 'search_button' %}" name='q' aria-label="Search" value='{{ request.GET.q }}'>
+            <span class='input-group-append'>
+                <button class="btn btn-primary" type="submit">{% trans "search_button" %}</button>
+            </span>
+            </div>
+        </form>
+    </div>
+    <div class='col-12'>
+        <hr>
+    </div>
+    {% if query %}
+    <div class='row  mb-3'>
+        <div class='col-12' >
+            {% trans "field_results_for" %} <b>{{ query }}</b><hr/>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if object_list.teams %}
+        <h4>{% trans "title_teams" %}</h4>
+        <table class='table table-bordered table-striped'>
+            <thead class="thead bg-terciary text-white">
+                <tr>
+                <th scope="col">{% trans "field_name" %}</th>
+                <th scope="col">{% trans "field_league" %}</th>
+                </tr>
+            </thead>
+        {% for team in object_list.teams %}
+        <tr>
+            <td><a class="search_hint" href="{% url 'team' team.id %}">{{ team.name }}</a></td>
+            <td>{% if team.league %}{{ team.league }}{% else %}-{%endif %}</td>
+        </tr>
+        {% endfor %}
+        </table>   
+    {% endif %}    
+    
+    {% if object_list.players %}
+        <h4>{% trans "title_players" %}</h4>
+        <table class='table table-bordered table-striped'>
+            <thead class="thead bg-terciary text-white">
+                <tr>
+                <th scope="col">{% trans "field_name" %}</th>
+                <th scope="col">{% trans "field_team" %}</th>
+                </tr>
+            </thead>
+        {% for player in object_list.players %}
+        <tr>
+            <td><a class="search_hint" href="#">{{ player.name }}</a></td>
+            <td>{% if player.team %}{{ player.team }}{% else %}-{%endif %}</td>
+        </tr>
+        {% endfor %}
+        </table>
+    {% endif %} 
+
+    
+    
+</div>
+{% endblock %}
+{% block footer_scripts %}
+<script>        
+        for (var i = 0; i < $(".search_hint").length; i++) {
+            var search_hint = $(".search_hint")[i];
+            var search_hint_html = $(search_hint).html();
+            var query_caseinsensitive = /{{ query }}/gi;
+            var replaced_html = search_hint_html.replace(new RegExp('({{ query }})', 'ig'), '<b>'+ "$1" + '</b>');
+            $(search_hint).html(replaced_html);
+        } 
+</script> 
+{% endblock %}

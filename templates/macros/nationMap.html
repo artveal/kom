@@ -1,0 +1,63 @@
+<script>
+    var svg = document.querySelector('#worldmap');
+	var g = document.querySelector('g#map-nations');
+	var path = document.querySelector('#map-nations #{{ nation_code }}');
+    // Zooming and panning to selected nation
+	function getTransform(svg, g, path) {
+        // <svg>
+        sbox = svg.getBBox();
+		sx = sbox.x;		
+		sy = sbox.y;		
+		sw = sbox.width;	
+		sh = sbox.height;	
+        
+        // <g>
+		gbox = g.getBBox();
+		gx = gbox.x;		
+		gy = gbox.y;		
+		gw = gbox.width;	
+		gh = gbox.height;
+
+		pbox = path.getBBox();
+		px = pbox.x;
+		py = pbox.y;
+		pw = pbox.width;
+		ph = pbox.height;
+
+        // Scale factor (relative to nation size)
+		scale_factor = Math.min(30, gw/(1.5*pw), gh/(1.5*ph));
+
+        // First translation. Fits the center of the nation bbox in the center of de viewbox
+		tx = gx + gw/2 - scale_factor * (px + pw/2);
+		ty = gy + gh/2 - scale_factor * (py + ph/2);	
+		tw = gw*scale_factor;
+		th = gh*scale_factor;
+
+        // Second translation. Fits viewbox to borders of svg, so there is no empty areas.
+		ptx = 0; // post-translation
+		pty = 0; // post-translation
+
+		if (tx > sx){
+			ptx = (sx - tx) / scale_factor;
+		}
+		if (tx+tw < sx+sw){
+			ptx = (sx+sw - (tx+tw)) / scale_factor;
+		}
+		if (ty > sy){
+			pty = (sy - ty) / scale_factor;
+		}
+		if (ty+th < sy+sh){
+			pty = (sy+sh - (ty+th)) / scale_factor;
+		}
+		
+		return {translate: [tx, ty], scale: scale_factor, posttranslate: [ptx, pty]}
+	}
+
+    // zoom to country and set border line width according to zoom.
+	var transform = getTransform(svg, g, path);
+	$('g#map-nations').attr("transform", "translate(" + transform.translate + ") scale(" + transform.scale + ") translate(" + transform.posttranslate + ")");
+    $('g#map-nations').css({"stroke-width": 2/transform.scale});
+
+    // fill selected country
+    $('#map-nations #{{ nation_code }}').css({'fill': "var(--primary)"});
+</script>

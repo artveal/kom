@@ -1,0 +1,55 @@
+{% load block_templates mathfilters static trans %}
+
+{% if player.injury_time > 0 %}
+    <span data-toggle="tooltip" title="{% trans 'field_injured' injury_time=player.injury_time %}" class="badge badge-danger mr-1">
+        <i class="fas fa-first-aid"></i>
+    </span>
+{% endif %}
+{% if team %}
+    {% if player.domestic_susp > 0 %}
+        <span data-toggle="tooltip" title="{% trans 'field_domestic_susp' suspension=player.domestic_susp %}" class="badge badge-danger mr-1">
+            <i class="fas fa-user fa-container"><i class="fas fa-slash fa-nested"></i></i>    
+        </span>
+    {% endif %}
+    {% if player.int_susp > 0 %}
+        <span data-toggle="tooltip" title="{% trans 'field_int_susp' suspension=player.int_susp %}" class="badge badge-danger mr-1">
+            <i class="fas fa-passport fa-container"><i class="fas fa-slash fa-nested"></i></i>
+        </span>
+    {% endif %}
+    {% if player.transfer_status == "Trn" %}
+        <span data-toggle="tooltip" title="{% trans 'field_transferable' %}"  class="badge badge-info mr-1">
+            <i class="fas fa-balance-scale-left"></i>
+        </span>
+    {% endif %}
+    {% if player.transfer_status == "NTrn" %}
+        <span data-toggle="tooltip" title="{% trans 'field_non_transferable' %}"  class="badge badge-info mr-1">
+            <i class="fas fa-balance-scale-left fa-container"><i class="fas fa-slash fa-nested"></i></i> 
+        </span>
+    {% endif %}
+    {% if player.loan_status == "Loa" %}
+        <span data-toggle="tooltip" title="{% trans 'field_loan_available' %}" class="badge badge-info mr-1">
+            <i class="fas fa-arrows-alt-h"></i></span>
+        </span>
+    {% endif %}
+    {% if player.loan_status == "NLoa" %}
+        <span data-toggle="tooltip" title="{% trans 'field_no_loan' %}" class="badge badge-info mr-1">
+            <i class="fas fa-arrows-alt-h fa-container"><i class="fas fa-slash fa-nested"></i></i> 
+        </span>
+    {% endif %}
+    {% if player.loan_by_team %}
+        <a href="{% url 'team' player.loan_by_team.id %}" data-toggle="tooltip" 
+            title="{% trans 'label_loaned_by' loan_team=player.loan_by_team %}" class="badge bg-gray-ligther mr-1">
+            {% include "macros/teamLogo.html" with team=player.loan_by_team size=0.75 %}
+        </a>
+    {% endif %}
+{% endif %}
+{% if national_team %}
+    {% if player.nt_susp > 0 %}
+        <span data-toggle="tooltip" title="{% trans 'field_nt_susp' suspension=player.nt_susp %}" class="badge badge-danger mr-1">
+            <i class="fas fa-plane fa-container"><i class="fas fa-slash fa-nested"></i></i>
+        </span>
+    {% endif %}
+{% endif %}
+{% if own_player %}
+
+{% endif %}

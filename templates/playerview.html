@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% load block_templates mathfilters static trans %}
+
+{% block head_scripts %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+{% endblock %}
+
+{% block title %}{{ player.name }}{% endblock %}
+{% block content %} 
+{% include "macros/teamShirts.html" %}
+<div id="chartdiv"></div>
+
+<div class="card">
+    <div class="card-header background-image">
+        <div class="d-flex flex-column flex-md-row align-content-center align-content-md-start">
+            <div class="p-2 align-self-center text-center">
+				{% if player.picture %}
+                <img src="{% static 'uploads/players/' %}{{ player.picture }}.png" width="5rem" height="5rem">
+                {% else %}
+                <span style="font-size: 5rem" class="fas fa-user-alt"></span>
+                {% endif %}
+                {% if player.team %}
+                
+                <div class="profile-shield" >
+                    <a title="{{ player.team.name }}"  data-toggle="tooltip" href="{% url 'team' player.team.id %}">
+                        {% include "macros/teamLogo.html" with team=player.team size=1 %}</a>
+                </div>
+                {% endif %}
+			</div>
+			<div class="p-2 align-self-center text-center text-md-left mr-md-auto flex-md-grow-1">
+				<h4 class="mb-0">
+                    <a data-toggle="tooltip" title="{{ player.nationality.name }}" href="{% url 'team' player.nationality.abbr %}"><span class="flag-icon flag-icon-{{ player.nationality.abbr|lower }}"></span></a>
+                    {{ player.name }}
+                </h4>	
+                <div><a href="{% url 'team' player.team.id %}">{{ player.team.name }}</div></a>			
+			</div>
+			<div class="p-2 align-self-center text-center text-md-left mr-md-auto3">
+				<div class="d-inline-flex align-content-center h4">
+                    {% include 'macros/playerStatus.html' with player=player national_team=True team=True %}
+				</div>
+			</div>
+        </div>
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="false">
+                    <i class="fas fa-info-circle"></i> <span class="d-none d-lg-inline">{% trans "field_info" %}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="stats-tab" data-toggle="tab" href="#stats" role="tab" aria-controls="stats" aria-selected="false">
+					<i class="fas fa-chart-pie"></i> <span class="d-none d-lg-inline">{% trans "title_statistics" %}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="transfers-tab" data-toggle="tab" href="#transfers" role="tab" aria-controls="transfers" aria-selected="false">
+					<i class="fas fa-exchange-alt"></i> <span class="d-none d-lg-inline">{% trans "title_transfers" %}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="victories-tab" data-toggle="tab" href="#career" role="tab" aria-controls="victories" aria-selected="false">
+                    <i class="fas fa-award"></i> <span class="d-none d-lg-inline">{% trans "field_career" %}</span></a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+				<div class="row infotable">
+					<div class="col-lg-4">
+						<canvas id="marksChart" width="200" height="200"></canvas>
+                        <dl class="row">
+                            <dt class="col-sm-5">{% trans 'field_defending' %}</dt>
+                            <dd class="col-sm-7">{% include 'macros/progressBar.html' with value=player.skills.def %}</dd>
+    
+                            <dt class="col-sm-5">{% trans 'field_passing' %}</dt>
+                            <dd class="col-sm-7">{% include 'macros/progressBar.html' with value=player.skills.pas %}</dd>
+                            
+                            <dt class="col-sm-5">{% trans 'field_shooting' %}</dt>
+                            <dd class="col-sm-7">{% include 'macros/progressBar.html' with value=player.skills.sho %}</dd>
+    
+                            <dt class="col-sm-5">{% trans 'field_shooting' %}</dt>
+                            <dd class="col-sm-7">{% include 'macros/progressBar.html' with value=player.skills.dri %}</dd>
+                            
+                            <dt class="col-sm-5">{% trans 'field_pace' %}</dt>
+                            <dd class="col-sm-7">{% include 'macros/progressBar.html' with value=player.skills.pac %}</dd>
+                            
+                            <dt class="col-sm-5">{% trans 'field_stamina' %}</dt>
+                            <dd class="col-sm-7">{% include 'macros/progressBar.html' with value=player.skills.sta %}</dd>
+    
+                            <dt class="col-sm-5">{% trans 'field_strength' %}</dt>
+                            <dd class="col-sm-7">{% include 'macros/progressBar.html' with value=player.skills.phy %}</dd>
+                        </dl>
+					</div>
+					<div class="col-lg-8">
+						<div class="p-2 align-self-center text-center mr-md-3">
+                            <dl class="row infotable">
+                                <dt class="col-sm-6 infolabel">{% trans "field_name" %}</td>
+                                <dd class="col-sm-6 infodata">{{ player.name }}</dd>
+                
+                                <dt class="col-sm-6 infolabel">{% trans "field_full_name" %}</dt>
+                                <dd class="col-sm-6 infodata">{{ player.full_name }}</dd>
+    
+                                <dt class="col-sm-6 infolabel">{% trans "field_age" %}</dt>
+                                <dd class="col-sm-6 infodata">{{ player.age }}</dd>
+    
+                                <dt class="col-sm-6 infolabel">{% trans "field_nationality" %}</dt>
+                                <dd class="col-sm-6 infodata">
+                                    <a href="{% if nation_team %}{% url 'team' nation_team.id %}{% else %}#{% endif %}">
+                                    <span class="flag-icon flag-icon-{{ player.nationality.abbr|lower }}"></span> {{ player.nationality }}</a>
+                                </dd>
+                            </dl>
+                            {% if player.team %}
+                            <dl class="row infotable">
+                                <dt class="col-sm-6 infolabel">{% trans "field_team" %}</td>
+                                <dd class="col-sm-6 infodata">
+                                    <a href="{% url 'team' player.team.id %}">
+                                        {% include "macros/teamLogo.html" with team=player.team size=1 %} {{ player.team.name }}
+                                    </a></dd>
+
+                                {% if player.loan_length > 0 %}
+                                <dt class="col-sm-6 infolabel">{% trans "field_loan_length" %}</dt>
+                                <dd class="col-sm-6 infodata">{{ player.loan_length }} {% trans "label_seasons" %}</dd>
+
+                                <dt class="col-sm-6 infolabel">{% trans "field_loan_contribution" %}</dt>
+                                <dd class="col-sm-6 infodata">{{ player.loan_contrib }} € ({{ player.loan_contrib|mult:100|div:player.salary }} %)</dd>
+
+                            </dl> <dl class="row infotable">    
+
+                                <dt class="col-sm-6 infolabel">{% trans "field_loaned_by" %}</td>
+                                <dd class="col-sm-6 infodata">
+                                    <a href="{% url 'team' player.loan_by_team.id %}">
+                                        {% include "macros/teamLogo.html" with team=player.loan_by_team size=1 %} {{ player.loan_by_team.name }}
+                                    </a></dd>
+                                {% endif %}
+                
+                                <dt class="col-sm-6 infolabel">{% trans "field_salary" %}</dt>
+                                <dd class="col-sm-6 infodata">{{ player.salary }} €</dd>
+
+                                <dt class="col-sm-6 infolabel">{% trans "field_contract_length" %}</dt>
+                                <dd class="col-sm-6 infodata">{{ player.contract_length }} {% trans "label_seasons" %}</dd>
+                            </dl>
+                            {% endif %}
+                            <div class="d-inline-flex align-content-center">
+                                {% if player.team %}
+                                    {% include "macros/teamShirt.html" with size=100 shirtstyle=player.team.shirt1_style shirtcolor1=player.team.shirt1_color1 shirtcolor2=player.team.shirt1_color2 shirtnumber=player.t_shirt_number %}
+                                {% endif %}
+                                {% if player.n_shirt_number and nation_team.shirt1_style %}
+                                    {% include "macros/teamShirt.html" with size=100 shirtstyle=nation_team.shirt1_style shirtcolor1=nation_team.shirt1_color1 shirtcolor2=nation_team.shirt1_color2 shirtnumber=player.n_shirt_number %}
+                                {% endif %}	    
+                            </div>
+                        </div>
+					</div>
+				</div>
+            </div>
+            <div class="tab-pane fade" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+                ...
+            </div>
+            <div class="tab-pane fade" id="transfers" role="tabpanel" aria-labelledby="transfers-tab">
+                ...
+            </div>
+            <div class="tab-pane fade" id="career" role="tabpanel" aria-labelledby="career-tab">
+                ...
+            </div>
+        </div>
+	</div>
+	
+	{% if request.user.is_admin %}
+	<div class="card-footer">
+		<a href="{% url 'admin:index' %}classes/player/{{ player.id}}" class="btn btn-primary float-right"><i class="fas fa-tools"></i></a> 
+	</div>
+	{% endif %}
+</div>
+
+{% endblock %}
+{% block footer_scripts %}
+<script>
+    function cssvar(name) {
+        var c = getComputedStyle(document.documentElement).getPropertyValue(name);
+        
+        c = c.split('(')[1].split(')')[0];
+        return c;
+    }
+    var marksCanvas = document.getElementById("marksChart");
+    
+    var full_name_labels = ["{% trans 'field_strength' %}", "{% trans 'field_defending' %}", "{% trans 'field_passing' %}", "{% trans 'field_shooting' %}", "{% trans 'field_dribbling' %}", "{% trans 'field_pace' %}", "{% trans 'field_stamina' %}"];
+        
+    var options = {
+        scale: {
+            ticks: {
+                beginAtZero: true,
+                max: 100,
+            }
+        },
+        legend: {
+            display: false
+        },
+        tooltips: {
+            enabled: true,
+            callbacks: {
+                title: function(tooltipItems, data) {
+                    return tooltipItems.xLabel;
+                },
+                label: function(tooltipItem, data) {
+                    return full_name_labels[tooltipItem.index] + ' : ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+                }
+            }
+        }
+    };
+    
+    var marksData = {
+        labels: ["{% trans 'field_abbr_strength' %}", "{% trans 'field_abbr_defending' %}", "{% trans 'field_abbr_passing' %}", "{% trans 'field_abbr_shooting' %}", "{% trans 'field_abbr_dribbling' %}", "{% trans 'field_abbr_pace' %}", "{% trans 'field_abbr_stamina' %}"],
+        datasets: [{
+            label: "Habilidades",
+            data: ["{{ player.skills.phy }}", "{{ player.skills.def }}", "{{ player.skills.pas }}", "{{ player.skills.sho }}", "{{ player.skills.dri }}", "{{ player.skills.pac }}", "{{ player.skills.sta }}"],
+            backgroundColor: "rgba(" + cssvar('--primary')+ ", 0.2)",
+            borderColor: "rgba(" + cssvar('--primary')+ ", 0.8)",
+        }]
+    };
+
+    var radarChart = new Chart(marksCanvas, {type: 'radar', data: marksData, options: options});
+</script>
+{% endblock %}

@@ -1,0 +1,19 @@
+
+
+{% for news_item in news %}
+<a href="{% url 'news' news_item.id %}" class="list-group-item list-group-item-action flex-column align-items-start">
+    <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">{{ news_item.title }}</h5>
+        <small><i class="fas fa-clock"></i> {{ news_item.pub_date|date:"D d M Y" }}</small>
+    </div>
+    <p class="mb-1">
+        {% if news_item.abstract %}
+            {{ news_item.abstract|slice:":255" }}{% if news_item.abstract|length > 255 %}...{% endif %}
+        {% else %}
+            {{ news_item.content|slice:":255" }}{% if news_item.content|length > 255 %}...{% endif %}
+        {% endif %}
+    </p>
+</a>
+{% endfor %}
+
+    

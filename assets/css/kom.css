@@ -1,0 +1,263 @@
+footer{
+	display: inline-block;
+	bottom: 0;
+	width: 100%;
+	height: 6rem; 
+	position: relative
+}
+
+.background-image{
+	background-image: url('../images/background.png');
+	text-align: center;
+	background-size: cover;
+}
+
+.container {
+	position: relative;
+	min-height: 90vh;
+	margin-top: 90px;
+	padding-bottom: 15px;
+  }
+
+.ultrasmall {
+	font-size: 65%;
+  }
+
+.card {
+  height: 100%;
+}
+
+.w-10 {
+	width: 10% !important;
+}
+
+.bg-terciary {
+	background-color: var(--terciary) !important;
+}
+
+.bg-gray-ligther {
+	background-color: var(--gray-lighter) !important;
+}
+
+.dropdown-menu .float-right .show  {
+	float: right !important;
+}
+
+.dropdown-menu .dropdown-menu-right .show {
+    right: 0;
+    left: auto;
+  }
+
+
+.shirt_styles{
+	position:absolute;
+	visibility: hidden;
+}
+
+.badge > abbr{
+	text-decoration: unset;
+}
+
+.badge-excellent, .badge-good, .badge-medium, .badge-weak, .badge-bad {
+	color: white;
+}
+
+.badge-excellent, .progress-excellent  {
+	background-color: #0c953b
+}
+
+.badge-good, .progress-good {
+	background-color: #8dc153
+}
+
+.badge-medium, .progress-medium {
+	background-color: #f6bb43
+}
+
+.badge-weak, .progress-weak {
+	background-color: #e77e23
+}
+
+.badge-bad, .progress-bad {
+	background-color: #e9573e
+}
+
+.badge-goalkeeper {
+	background-color: #d13913
+}
+
+.badge-defender {
+	background-color: #e77e23 
+}
+
+.badge-midfielder {
+	background-color: #4caf50
+}
+
+.badge-forward {
+	background-color: #669eff 
+}
+
+.goalkeeper {
+	color: #d13913
+}
+
+.defender {
+	color: #e77e23 
+}
+
+.midfielder {
+	color: #4caf50
+}
+
+.forward {
+	color: #669eff 
+}
+
+
+.excellent {
+	color: #0c953b
+}
+
+.good {
+	color: #8dc153
+}
+
+.medium {
+	color: #f6bb43
+}
+
+.weak {
+	color: #e77e23
+}
+
+.bad {
+	color: #e9573e
+}
+
+.shirtblock{
+	display: block;
+	width: inherit;
+}
+
+.shirtblock > .shirt{
+	position: absolute;
+	display: block;
+	width: inherit;
+}
+
+.shirtblock > .shirtnumber{
+	position: absolute;
+	display: block;
+	width: inherit;
+	text-align: center;
+}
+
+.shirtnumber > .background{
+	text-align: center;
+	font-family: 'Impact', 'Blippo';
+	border-radius: 1000px;
+	font-size: 0.9em;
+	width: 50%;
+    margin: 25%;
+}
+
+.background > .number{
+    filter: brightness(0.5) grayscale(1) drop-shadow(0px 0px 0.1px black) invert(1)
+}
+
+.profile-shield{
+	position: relative;
+    display: block;
+    margin-left: 3.5rem;
+    margin-top: -20px;
+    height: 30px;
+    width: 30px;
+    border: 2px solid black;
+    border-radius: 50px;
+    background-color: var(--gray-lighter);
+    padding-top: 2.5px;
+}
+
+.fa-container{
+	position: relative;
+	font-size: 0.8em
+}
+
+.fa-nested{
+	position: absolute;
+	left: -0.2em;
+	top: -0.05em;
+}
+
+.badge-danger > .fa-container > .fa-nested {
+    text-shadow: 0em 0.17em var(--danger);
+}
+
+
+
+.worldmap{
+	display: block;
+	overflow: hidden;
+	fill: var(--gray-light);
+	background-color: var(--white);
+	stroke: var(--gray-lighter);
+	stroke-width: 0.01rem;
+	paint-order: stroke;
+}
+
+.table-responsive th:first-child, .table-responsive > tr .theader-light, .table-responsive > tr .theader-dark {
+  position:sticky;
+  left:0px;
+  background-color: #e9ecef;
+
+} 
+
+@media (max-width: 575.98px) {
+	.table-sm {
+		font-size: 80%;	
+	}
+	.table-sm td, .table-sm th {
+		padding: 0.5rem;
+	}
+}
+
+
+.tr-no-wrap > td, .tr-no-wrap > th {
+	flex-wrap: nowrap;
+	white-space: nowrap;
+}
+
+.no-wrap{
+	flex-wrap: nowrap;
+	white-space: nowrap;
+}
+
+.td-center{
+	vertical-align: middle;
+	text-align: center
+}
+
+.infotable {
+	padding: 5px
+}
+
+.infolabel {
+	background-color: rgba(0, 0, 0, 0.03);
+	font-weight: bold;
+	border: 1px solid rgba(0, 0, 0, 0.125);
+	margin: 0px 0px 3px;
+}
+
+@media (min-width: 576px) {
+	.infolabel {
+		text-align: right;
+	}
+  }
+
+
+.infodata{
+	margin: 0px 0px 3px 3px;
+	margin-inline-start: 0px;
+	flex-wrap: wrap;
+}

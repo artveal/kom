@@ -1,0 +1,58 @@
+{% load trans static mathfilters %}
+{% if players %}
+<div class="d-block d-sm-none text-center"><i class="fas fa-info-circle"></i> <small class="ultrasmall text-muted">{% trans 'message_rotate_to_full_view' %}</small></div>
+
+<div class="table-responsive">
+    <table class="table table-sm fix-first-column table-hover">
+        <tr class="thead-light text-uppercase text-center">
+            <th class="text-left"></th>
+            <th><abbr data-toggle="tooltip" title="{% trans 'field_position' %}">{% trans 'field_abbr_position' %}</abbr></th>
+            <th><abbr data-toggle="tooltip" title="{% trans 'field_overall' %}">{% trans 'field_abbr_overall' %}</abbr></th>
+            <th><abbr data-toggle="tooltip" title="{% trans 'field_age' %}">{% trans 'field_abbr_age' %}</abbr></th>
+            <th><abbr data-toggle="tooltip" title="{% trans 'field_status' %}">{% trans 'field_abbr_status' %}</abbr></th>
+            {% if team.national_team %}<th><abbr data-toggle="tooltip" title="{% trans 'field_team' %}">{% trans 'field_abbr_team' %}</abbr></td>{% endif %}
+            <th><abbr data-toggle="tooltip" title="{% trans 'field_defending' %}">{% trans 'field_abbr_defending' %}</abbr></th>
+            <th><abbr data-toggle="tooltip" title="{% trans 'field_passing' %}">{% trans 'field_abbr_passing' %}</abbr></th>
+            <th><abbr data-toggle="tooltip" title="{% trans 'field_shooting' %}">{% trans 'field_abbr_shooting' %}</abbr></th>
+            <th><abbr data-toggle="tooltip" title="{% trans 'field_dribbling' %}">{% trans 'field_abbr_dribbling' %}</abbr></th>
+            <th><abbr data-toggle="tooltip" title="{% trans 'field_pace' %}">{% trans 'field_abbr_pace' %}</abbr></th>
+            <th><abbr data-toggle="tooltip" title="{% trans 'field_strength' %}">{% trans 'field_abbr_strength' %}</abbr></th>
+            <th><abbr data-toggle="tooltip" title="{% trans 'field_stamina' %}">{% trans 'field_abbr_stamina' %}</abbr></th>
+        </tr>
+        {% for player in players %}
+        <tr class="tr-no-wrap text-center">
+            <th class="text-left">
+                {% if team.national_team == None %}
+                <a href="{% url 'team' player.nationality.abbr %}"><span class="flag-icon flag-icon-{{ player.nationality.abbr|lower }}"></span></a> {% endif %}
+                <a title="{{ player.short_name }}" href="{% url 'player' player.id %}">{{ player.short_name }}</a></td>       
+            <td>{% include "macros/positionColorBadge.html" with position=player.position1 %}
+                {% if player.position2 %}{% include "macros/positionColorBadge.html" with position=player.position2 %}{% endif %}
+                {% if player.position3 %}{% include "macros/positionColorBadge.html" with position=player.position3 %}{% endif %}
+                {% if player.position4 %}{% include "macros/positionColorBadge.html" with position=player.position4 %}{% endif %}
+            </td>
+            <td>{% include "macros/skillFormattedBadge.html" with overall=player.skills.pac %}</td>
+            <td>{{ player.age }}</td>
+            <td>
+                {% if nation_team %}
+                    {% include 'macros/playerStatus.html' with player=player national_team=True %}
+                {% else %}
+                    {% include 'macros/playerStatus.html' with player=player team=True %}
+                {% endif %}
+            </td>
+            {% if team.national_team %}
+                <td><a href="{% url 'team' player.team.id %}">{% include "macros/teamLogo.html" with team=player.team size=1 %} {{ player.team.name }}</a></td>
+            {% endif %}
+            <td>{% include "macros/skillFormattedSpan.html" with overall=player.skills.def %}</td>
+            <td>{% include "macros/skillFormattedSpan.html" with overall=player.skills.pas %}</td>
+            <td>{% include "macros/skillFormattedSpan.html" with overall=player.skills.sho %}</td>
+            <td>{% include "macros/skillFormattedSpan.html" with overall=player.skills.dri %}</td>
+            <td>{% include "macros/skillFormattedSpan.html" with overall=player.skills.pas %}</td>
+            <td>{% include "macros/skillFormattedSpan.html" with overall=player.skills.phy %}</td>
+            <td>{% include "macros/skillFormattedSpan.html" with overall=player.skills.sta %}</td>
+        </tr>
+        {% endfor %}    
+    </table>
+</div>
+{% else %}
+    <div class="alert alert-dark">{% trans 'message_no_players_found' %}</div>
+{% endif %}

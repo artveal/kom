@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load block_templates static trans %}
+
+{% block title %}{{ team.name }}{% endblock %}
+{% block content %} 
+{% include "macros/teamShirts.html" %}
+<div class="card">
+    <div class="card-header background-image">
+        <div class="d-flex flex-column flex-md-row align-content-center align-content-md-start">
+            <div class="p-2 align-self-center text-center">
+				{% include "macros/teamLogo.html" with team=team size=5 %}
+			</div>
+			<div class="p-2 align-self-center text-center text-md-left mr-md-auto flex-md-grow-1">
+				<h4 class="mb-0">{{ team.name }}</h4>
+				<div>{% if team.manager %}<strong>Manager:</strong> {{ team.manager }}{% endif %}</div>
+			</div>
+			<div class="p-2 align-self-center text-center text-md-left mr-md-auto3">
+				<div class="d-inline-flex align-content-center">
+					{% include "macros/teamShirt.html" with size=50 shirtstyle=team.shirt1_style shirtcolor1=team.shirt1_color1 shirtcolor2=team.shirt1_color2 %}
+					{% include "macros/teamShirt.html" with size=50 shirtstyle=team.shirt2_style shirtcolor1=team.shirt2_color1 shirtcolor2=team.shirt2_color2 %}	
+				</div>
+			</div>
+        </div>
+        <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">
+                    <i class="fas fa-info-circle"></i> <span class="d-none d-lg-inline">{% trans "field_info" %}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="players-tab" data-toggle="tab" href="#players" role="tab" aria-controls="players">
+					<i class="fas fa-socks"></i> <span class="d-none d-lg-inline">{% trans "field_players" %}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="schedule-tab" data-toggle="tab" href="#schedule" role="tab" aria-controls="schedule">
+					<i class="fas fa-calendar"></i> <span class="d-none d-lg-inline">{% trans "field_calendar" %}</span></a>
+            </li>
+            {% if team.national_team is None %}
+            <li class="nav-item">
+                <a class="nav-link" id="youthteam-tab" data-toggle="tab" href="#youthteam" role="tab" aria-controls="youthteam">
+					<i class="fas fa-child"></i> <span class="d-none d-lg-inline">{% trans "field_youth_team" %}</span></a>
+            </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" id="career-tab" data-toggle="tab" href="#career" role="tab" aria-controls="career">
+                    <i class="fas fa-award"></i> <span class="d-none d-lg-inline">{% trans "field_career" %}</span></a>
+            </li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+				<div class="row infotable">
+					<div class="col">
+						<dl class="row infotable">
+							<dt class="col-sm-6 infolabel">{% trans "field_name" %}</td>
+							<dd class="col-sm-6 infodata">{{ team.name }}</dd>
+			
+							<dt class="col-sm-6 infolabel">{% trans "field_abbr" %}</dt>
+							<dd class="col-sm-6 infodata initialism">{{ team.abbr }}</dd>
+
+							<dt class="col-sm-6 infolabel">{% trans "field_stadium" %}</dt>
+							<dd class="col-sm-6 infodata">{{ team.stadium }}</dd>
+
+							<dt class="col-sm-6 infolabel">{% trans "field_manager" %}</dt>
+							<dd class="col-sm-6 infodata">{{ team.manager }}</dd>
+						</dl>
+					</div>
+					{% if team.national_team is not None %}
+					<div class="col-12 col-md-6">
+						{% worldmap_block %}
+					</div>
+					{% else %}
+					<div class="col">
+						<dl class="row infotable">
+							<dt class="col-sm-6 infolabel">{% trans "field_budget" %}</td>
+							<dd class="col-sm-6 infodata">{{ team.budget }} €</dd>
+			
+							<dt class="col-sm-6 infolabel">{% trans "field_elo_points" %}</dt>
+							<dd class="col-sm-6 infodata">{{ team.elo_points }}</dd>
+						</dl>
+					</div>
+					{% endif %}
+				</div>
+            </div>
+            <div class="tab-pane fade" id="players" role="tabpanel" aria-labelledby="players-tab">
+                {% include 'blocks/playerList.html' with players=players team=team %}
+            </div>
+            <div class="tab-pane fade" id="schedule" role="tabpanel" aria-labelledby="schedule-tab">
+                ...
+            </div>
+            {% if team.national_team is None %}
+            <div class="tab-pane fade" id="youthteam" role="tabpanel" aria-labelledby="youthteam-tab">
+                {% include 'blocks/playerList.html' with players=youth_players %}
+            </div>
+            {% endif %}
+            <div class="tab-pane fade" id="career" role="tabpanel" aria-labelledby="career-tab">
+                ...
+            </div>
+        </div>
+	</div>
+	
+	{% if request.user.is_admin %}
+	<div class="card-footer">
+		<a href="{% url 'admin:index' %}classes/team/{{ team.id}}" class="btn btn-primary float-right"><i class="fas fa-tools"></i></a> 
+	</div>
+	{% endif %}
+</div>
+
+{% endblock %}
+{% block footer_scripts %}
+{% if team.national_team %}
+{% include 'macros/nationMap.html' with nation_code=team.abbr %}
+{% endif %}
+{% endblock %}

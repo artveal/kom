@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3>{{ news.title }}</h3>
+{% if news.abstract %}<h5 class="text-justify text-primary">{{ news.abstract }}</h5>{% endif %}
+<hr>
+<div class="d-flex">
+    <small class="mr-auto text-muted"><i class="fas fa-user"></i> {{ news.author }}</small>
+    <small class="badge badge-dark"><i class="fas fa-clock"></i> {{ news.pub_date|date:"D d M Y" }}</small>
+</div>
+<br>
+<div class="news-body text-justify">
+    {{ news.content }}
+</div>
+<br>
+<div class="news-footer bg-gray-ligther border rounded row">
+    <div class="col-6 p-2 text-truncate">
+        {% if previous_news %}<a href="{% url 'news' previous_news.id %}"><i class="fas fa-angle-double-left"></i> {{ previous_news.title }}</a>{% endif %}
+    </div>
+    <div class="col-6 p-2 text-md-right text-truncate">
+        {% if next_news %}<a href="{% url 'news' next_news.id %}">{{ next_news.title }} <i class="fas fa-angle-double-right"></i></a>{% endif %}
+    </div>
+</div>
+
+{% endblock %}

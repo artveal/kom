@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load block_templates mathfilters static trans %}
+
+{% block head_scripts %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+{% endblock %}
+
+{% block title %}{{ competition.name }}{% endblock %}
+{% block content %} 
+{% include "macros/teamShirts.html" %}
+<div id="chartdiv"></div>
+
+<div class="card">
+    <div class="card-header background-image">
+        <div class="d-flex flex-column flex-md-row align-content-center align-content-md-start">
+            <div class="p-2 align-self-logo text-center">
+				{% if competition.logo %}
+                <img src="{% static 'uploads/competitions/' %}{{ competition.logo }}.png" width="5rem" height="5rem">
+                {% else %}
+                <span style="font-size: 5rem" class="fas fa-trophy"></span>
+                {% endif %}
+			</div>
+			<div class="p-2 align-self-center text-center text-md-left mr-md-auto flex-md-grow-1">
+				<h4 class="mb-0">
+                    {{ competition.name }}
+                </h4>	
+                <div>{{ competition.association }}</div>			
+			</div>
+        </div>
+        <ul class="nav nav-tabs card-header-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="false">
+                    <i class="fas fa-info-circle"></i> <span class="d-none d-lg-inline">{% trans "field_info" %}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="stats-tab" data-toggle="tab" href="#stats" role="tab" aria-controls="stats" aria-selected="false">
+					<i class="fas fa-chart-pie"></i> <span class="d-none d-lg-inline">{% trans "title_statistics" %}</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="rules-tab" data-toggle="tab" href="#rules" role="tab" aria-controls="rules" aria-selected="false">
+					<i class="fas fa-gavel"></i> <span class="d-none d-lg-inline">{% trans "title_statistics" %}</span></a>
+            </li>
+            
+        </ul>
+    </div>
+    <div class="card-body">
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">				
+                <form class="form mr-md-auto ajaxSubmit" action="{% url 'ajax' 'select_season' %}" data-ajaxblock="season-display">
+                    <div class='input-group'>
+                        <select class="form-control" id="season" name="season">
+                        {% for season in seasons %}
+                                <option value="{{ season.season.id }}">{{ season.season.name }}</option>
+                        {% endfor %}
+                        </select>
+                        <span class='input-group-append'><button type="submit" class="btn btn-primary">Show</button></span>
+                        
+                    </div>
+                </form>
+                <div class="mt-2" id="season-display"></div>
+                <!--
+                {% for season in seasons %}
+                <h4>{{ season.season.name }}</h4>
+                {% if season.rounds|length > 0 %}
+                <div class=col-3>
+                    {% for season_round in season.rounds %}
+                    <div>{{ season_round.name }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% endfor %}-->
+            </div>
+            <div class="tab-pane fade" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+                ...
+            </div>
+            <div class="tab-pane fade" id="rules" role="tabpanel" aria-labelledby="rules-tab">
+                ...
+            </div>
+        </div>
+	</div>
+	
+	{% if request.user.is_admin %}
+	<div class="card-footer">
+		<a href="{% url 'admin:index' %}classes/competition/{{ competition.id}}" class="btn btn-primary float-right"><i class="fas fa-tools"></i></a> 
+	</div>
+	{% endif %}
+</div>
+
+{% endblock %}
+{% block footer_scripts %}
+
+{% endblock %}

@@ -1,0 +1,15 @@
+
+{% load trans mathfilters %}
+<span 
+        {% if position == "GK" %}
+        class="badge badge-dark badge-goalkeeper"
+        {% elif position in 'CD RD LD RW LW' %}
+        class="badge badge-dark badge-defender"
+        {% elif position in 'DM RM LM CM OM' %}
+        class="badge badge-dark badge-midfielder"
+        {% elif position in 'CF LF RF' %}
+        class="badge badge-dark badge-forward"
+        {% endif %}
+    >
+    <abbr data-toggle="tooltip" title="{% trans position|sumstr:'_position_label' %}">{% trans position|sumstr:"_position_abbr" %}</abbr>
+</span>
